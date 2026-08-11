@@ -1,0 +1,26 @@
+on:
+    push:
+        tags:
+            - 'v*' # Trigger when a version tag is pushed (e.g., v0.1.0)
+
+jobs:
+    release:
+        name: Create Forgejo Release
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v7
+              with:
+                  fetch-depth: 0
+
+            - run: cargo install git-cliff
+            - run: git-cliff --latest --strip header -o CHANGELOG.md
+            - run: cat CHANGELOG.md
+
+            - uses: actions/forgejo-release@v2.13.4
+              with:
+                  direction: upload
+                  token: ${{ secrets.WRITE_TOKEN }}
+                  title: ${{ forge.ref_name }} released
+                  release-notes-file: CHANGELOG.md
+                  skip-assets: true

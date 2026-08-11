@@ -1,0 +1,9 @@
+flow-texpack: A program that will allow you to generate texture atlas.
+Maintainer:  Andreas Widen <aw@luflow.net>
+License: zlib
+URL: https://www.luflow.net
+
+Authors
+=======
+
+Andreas Widen <aw@luflow.net>
