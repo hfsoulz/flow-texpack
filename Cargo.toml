@@ -1,6 +1,6 @@
 [package]
 name = "flow-texpack"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 authors = ["Andreas Widen <aw@luflow.net>"]
 description = "flow-texpack is a program that will allow you to generate texture atlas from input images (BMP, HDR, JPG, PNG, TGA, TIFF, WEBP). The application generates both texture atlas and descriptions file that can be read by a game."
@@ -8,7 +8,7 @@ license = "Zlib"
 repository = "https://git.luflow.net/hfsoulz/flow-texpack.git"
 readme = "README.md"
 documentation = "https://git.luflow.net/hfsoulz/flow-texpack.git"
-keywords = ["texture atlas", "image atlas", "generator"]
+keywords = ["image atlas", "image atlas-generator", "texture-atlas", "texture-atlas-generator", "texture-atlas-builder"]
 exclude = [".github", "/ci/*", "*.log"]
 
 [dependencies]
