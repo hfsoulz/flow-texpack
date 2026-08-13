@@ -7,7 +7,7 @@ use std::path::PathBuf;
 use flow_texpack::{Texture, exists_file, remove_dir_all, remove_file};
 
 fn verify_texture_size(image_path: &PathBuf, width: u32, height: u32) {
-    let mut t1 = Texture::new();
+    let mut t1 = Texture::default();
     t1.load(image_path, false, false, false, 0, 1024);
     assert_eq!(t1.width, width);
     assert_eq!(t1.height, height);
@@ -145,12 +145,10 @@ fn validate_descriptor_txt(txt_path: &PathBuf, with_header: bool) {
 fn get_hash_value(hash_path: &PathBuf) -> u64 {
     let result = std::fs::read_to_string(hash_path);
 
-    let old_hash_value = match result {
+    match result {
         Ok(old_hash_value) => old_hash_value.parse().unwrap(),
         Err(_) => 0,
-    };
-
-    return old_hash_value;
+    }
 }
 
 // *************************************************
@@ -397,18 +395,18 @@ fn cli_success_input_defaults() -> Result<(), Box<dyn std::error::Error>> {
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -429,18 +427,18 @@ fn cli_success_input_defaults_v2() -> Result<(), Box<dyn std::error::Error>> {
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -464,18 +462,18 @@ fn cli_success_input_with_exclude_defaults() -> Result<(), Box<dyn std::error::E
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -499,18 +497,18 @@ fn cli_success_input_with_exclude_defaults_v2() -> Result<(), Box<dyn std::error
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -532,18 +530,18 @@ fn cli_success_input_defaults_verbose() -> Result<(), Box<dyn std::error::Error>
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -565,18 +563,18 @@ fn cli_success_input_defaults_verbose_v2() -> Result<(), Box<dyn std::error::Err
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -599,21 +597,21 @@ fn cli_success_input_defaults_log() -> Result<(), Box<dyn std::error::Error>> {
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
     let log_path = PathBuf::from("flow-texpack.log");
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
-    assert_eq!(exists_file(&log_path), true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
+    assert!(exists_file(&log_path));
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
     remove_file(&log_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
-    assert_eq!(exists_file(&log_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
+    assert!(!exists_file(&log_path));
 
     Ok(())
 }
@@ -675,18 +673,18 @@ fn cli_success_input_defaults_force() -> Result<(), Box<dyn std::error::Error>> 
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) == 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) == 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -708,18 +706,18 @@ fn cli_success_input_defaults_force_v2() -> Result<(), Box<dyn std::error::Error
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) == 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) == 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -741,18 +739,18 @@ fn cli_success_input_defaults_force_square() -> Result<(), Box<dyn std::error::E
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 1024, 1024);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -775,18 +773,18 @@ fn cli_success_input_defaults_atlas_image_png() -> Result<(), Box<dyn std::error
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -809,18 +807,18 @@ fn cli_success_input_defaults_atlas_image_tga() -> Result<(), Box<dyn std::error
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.tga", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -843,18 +841,18 @@ fn cli_success_input_defaults_atlas_image_tiff() -> Result<(), Box<dyn std::erro
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.tiff", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -877,18 +875,18 @@ fn cli_success_input_defaults_atlas_image_webp() -> Result<(), Box<dyn std::erro
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.webp", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -911,18 +909,18 @@ fn cli_success_input_defaults_atlas_descriptor_json() -> Result<(), Box<dyn std:
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -945,18 +943,18 @@ fn cli_success_input_defaults_atlas_descriptor_txt() -> Result<(), Box<dyn std::
     let json_path = PathBuf::from(format!("{}.txt", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -980,18 +978,18 @@ fn cli_success_input_defaults_atlas_descriptor_txt_desc() -> Result<(), Box<dyn 
     let json_path = PathBuf::from(format!("{}.txt", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1015,18 +1013,18 @@ fn cli_success_input_defaults_atlas_size_64() -> Result<(), Box<dyn std::error::
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1050,18 +1048,18 @@ fn cli_success_input_defaults_atlas_size_128() -> Result<(), Box<dyn std::error:
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 128, 128);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1085,18 +1083,18 @@ fn cli_success_input_defaults_atlas_size_256() -> Result<(), Box<dyn std::error:
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 256, 256);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1120,18 +1118,18 @@ fn cli_success_input_defaults_atlas_size_512() -> Result<(), Box<dyn std::error:
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 512, 512);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1155,18 +1153,18 @@ fn cli_success_input_defaults_atlas_size_1024() -> Result<(), Box<dyn std::error
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 1024, 1024);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1190,18 +1188,18 @@ fn cli_success_input_defaults_atlas_size_2048() -> Result<(), Box<dyn std::error
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 2048, 2048);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1225,18 +1223,18 @@ fn cli_success_input_defaults_atlas_size_4096() -> Result<(), Box<dyn std::error
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 4096, 4096);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1260,18 +1258,18 @@ fn cli_success_input_defaults_atlas_size_8192() -> Result<(), Box<dyn std::error
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 8192, 8192);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1302,18 +1300,18 @@ fn cli_success_input_defaults_rect_heuristic_short_side_fit()
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1344,18 +1342,18 @@ fn cli_success_input_defaults_rect_heuristic_long_side_fit()
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1385,18 +1383,18 @@ fn cli_success_input_defaults_rect_heuristic_area_fit() -> Result<(), Box<dyn st
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1427,18 +1425,18 @@ fn cli_success_input_defaults_rect_heuristic_bottom_left() -> Result<(), Box<dyn
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1469,18 +1467,18 @@ fn cli_success_input_defaults_rect_heuristic_contact_point()
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1503,18 +1501,18 @@ fn cli_success_input_defaults_premultiply() -> Result<(), Box<dyn std::error::Er
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 32, 32);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1538,18 +1536,18 @@ fn cli_success_input_defaults_trim() -> Result<(), Box<dyn std::error::Error>> {
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 32, 32);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1574,18 +1572,18 @@ fn cli_success_input_defaults_unique() -> Result<(), Box<dyn std::error::Error>>
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 128, 128);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1610,18 +1608,18 @@ fn cli_success_input_defaults_rotate() -> Result<(), Box<dyn std::error::Error>>
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 256, 128);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1647,18 +1645,18 @@ fn cli_success_input_defaults_adjust_size() -> Result<(), Box<dyn std::error::Er
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 128, 128);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1684,18 +1682,18 @@ fn cli_success_input_defaults_adjust_fit() -> Result<(), Box<dyn std::error::Err
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1722,19 +1720,19 @@ fn cli_success_input_defaults_validate_descriptor_json() -> Result<(), Box<dyn s
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
     validate_descriptor_json(&json_path);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1763,19 +1761,19 @@ fn cli_success_input_defaults_validate_descriptor_txt() -> Result<(), Box<dyn st
     let txt_path = PathBuf::from(format!("{}.txt", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&txt_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&txt_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
     validate_descriptor_txt(&txt_path, false);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&txt_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&txt_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1805,19 +1803,19 @@ fn cli_success_input_defaults_validate_descriptor_txt_header()
     let txt_path = PathBuf::from(format!("{}.txt", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&txt_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&txt_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
     validate_descriptor_txt(&txt_path, true);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&txt_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&txt_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1841,18 +1839,18 @@ fn cli_success_input_defaults_load_filter_bmp() -> Result<(), Box<dyn std::error
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1876,18 +1874,18 @@ fn cli_success_input_defaults_load_filter_hdr() -> Result<(), Box<dyn std::error
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1911,18 +1909,18 @@ fn cli_success_input_defaults_load_filter_jpg() -> Result<(), Box<dyn std::error
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1946,18 +1944,18 @@ fn cli_success_input_defaults_load_filter_png() -> Result<(), Box<dyn std::error
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 256, 256);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -1981,18 +1979,18 @@ fn cli_success_input_defaults_load_filter_tga() -> Result<(), Box<dyn std::error
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -2016,18 +2014,18 @@ fn cli_success_input_defaults_load_filter_tiff() -> Result<(), Box<dyn std::erro
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }
@@ -2051,18 +2049,18 @@ fn cli_success_input_defaults_load_filter_webp() -> Result<(), Box<dyn std::erro
     let json_path = PathBuf::from(format!("{}.json", out_file_path));
     let image_path = PathBuf::from(format!("{}0.png", out_file_path));
 
-    assert_eq!(exists_file(&hash_path), true);
-    assert_eq!(exists_file(&json_path), true);
-    assert_eq!(exists_file(&image_path), true);
-    assert_eq!(get_hash_value(&hash_path) > 0, true);
+    assert!(exists_file(&hash_path));
+    assert!(exists_file(&json_path));
+    assert!(exists_file(&image_path));
+    assert!(get_hash_value(&hash_path) > 0);
 
     verify_texture_size(&image_path, 64, 64);
 
     remove_dir_all(&parent_path);
 
-    assert_eq!(exists_file(&hash_path), false);
-    assert_eq!(exists_file(&json_path), false);
-    assert_eq!(exists_file(&image_path), false);
+    assert!(!exists_file(&hash_path));
+    assert!(!exists_file(&json_path));
+    assert!(!exists_file(&image_path));
 
     Ok(())
 }

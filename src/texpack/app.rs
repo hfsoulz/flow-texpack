@@ -22,20 +22,20 @@ use std::ffi::OsString;
 use std::fs;
 use std::hash::{DefaultHasher, Hash, Hasher};
 use std::io::Write;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 /// name of the application:
-const NAME: &'static str = "https://git.luflow.net/hfsoulz/flow-texpack.git";
+const NAME: &str = "https://git.luflow.net/hfsoulz/flow-texpack.git";
 
 /// short about description shown for option '-h':
-const ABOUT: &'static str = "
+const ABOUT: &str = "
 flow-texpack is a program that will allow you to generate texture atlas from input images (BMP, HDR,
 JPG, PNG, TGA, TIFF, WEBP). The application generates both texture atlas and descriptions file that
 can be read by a game.";
 
 /// long about description shown for option '--help':
-const LONG_ABOUT: &'static str = "
+const LONG_ABOUT: &str = "
 flow-texpack is a program that will allow you to generate texture atlas from input images (BMP, HDR,
 JPG, PNG, TGA, TIFF, WEBP). The application generates both texture atlas and descriptions file that
 can be read by a game.
@@ -259,13 +259,8 @@ pub struct App {
     hash_value: u64,
 }
 
-impl App {
-    /// Instantiates a new App instance.
-    ///
-    /// # Panics
-    ///
-    /// If initialization failed.
-    pub fn new() -> Self {
+impl Default for App {
+    fn default() -> Self {
         Self {
             cli_args: CliArgs::parse(),
             console: Console::new().shared(),
@@ -292,7 +287,9 @@ impl App {
             hash_value: 0,
         }
     }
+}
 
+impl App {
     /// Execute the main application loop.
     ///
     /// # Panics
@@ -306,7 +303,7 @@ impl App {
         self.initialize().await;
 
         if !self.identical_hash().await {
-            if self.input_files.len() > 0 {
+            if !self.input_files.is_empty() {
                 // remove old atlas files if any:
                 self.remove_old_files();
 
@@ -317,10 +314,10 @@ impl App {
                 self.sort_textures();
 
                 // make sure out directory exists:
-                if !exists_dir(&self.cli_args.output) {
-                    if let Some(parent_dir) = self.cli_args.output.parent() {
-                        create_dir_all(&parent_dir.to_path_buf());
-                    }
+                if !exists_dir(&self.cli_args.output)
+                    && let Some(parent_dir) = self.cli_args.output.parent()
+                {
+                    create_dir_all(&parent_dir.to_path_buf());
                 }
 
                 // pack the textures:
@@ -382,7 +379,7 @@ impl App {
             }
         }
 
-        return false;
+        false
     }
 
     /// initialize logger:
@@ -456,10 +453,10 @@ impl App {
             for path in &exclude_vec {
                 self.prepare_exclude_files(path).await;
             }
-        } else if let Some(exclude_file) = self.cli_args.exclude_file.clone() {
-            if exclude_file.is_file() {
-                self.read_exclude_file(&exclude_file).await;
-            }
+        } else if let Some(exclude_file) = self.cli_args.exclude_file.clone()
+            && exclude_file.is_file()
+        {
+            self.read_exclude_file(&exclude_file).await;
         }
 
         // prepare input files and exclude those above if any:
@@ -467,10 +464,10 @@ impl App {
             for path in &input_vec {
                 self.prepare_input_files(path).await;
             }
-        } else if let Some(input_file) = self.cli_args.input_file.clone() {
-            if input_file.is_file() {
-                self.read_input_file(&input_file).await;
-            }
+        } else if let Some(input_file) = self.cli_args.input_file.clone()
+            && input_file.is_file()
+        {
+            self.read_input_file(&input_file).await;
         }
     }
 
@@ -491,25 +488,21 @@ impl App {
             self.add_exclude_file(path);
         } else {
             let mut reader = tokio::fs::read_dir(path).await.unwrap();
-            loop {
-                if let Some(f) = reader.next_entry().await.unwrap() {
-                    if f.path().is_dir() {
-                        self.prepare_exclude_files(&f.path()).await;
-                    } else if f.path().is_file() {
-                        self.add_exclude_file(&f.path());
-                    }
-                } else {
-                    break;
+            while let Some(f) = reader.next_entry().await.unwrap() {
+                if f.path().is_dir() {
+                    self.prepare_exclude_files(&f.path()).await;
+                } else if f.path().is_file() {
+                    self.add_exclude_file(&f.path());
                 }
             }
         }
     }
 
-    fn add_exclude_file(&mut self, path: &PathBuf) {
+    fn add_exclude_file(&mut self, path: &Path) {
         if let Some(extension) = path.extension() {
             let ext = OsString::from(extension);
             if self.supported_extensions_load.contains(&ext) {
-                self.exclude_files.insert(path.clone());
+                self.exclude_files.insert(path.to_path_buf());
             }
         }
     }
@@ -537,15 +530,11 @@ impl App {
             self.add_input_file(path);
         } else {
             let mut reader = tokio::fs::read_dir(path).await.unwrap();
-            loop {
-                if let Some(f) = reader.next_entry().await.unwrap() {
-                    if f.path().is_dir() {
-                        self.prepare_input_files(&f.path()).await;
-                    } else if f.path().is_file() {
-                        self.add_input_file(&f.path());
-                    }
-                } else {
-                    break;
+            while let Some(f) = reader.next_entry().await.unwrap() {
+                if f.path().is_dir() {
+                    self.prepare_input_files(&f.path()).await;
+                } else if f.path().is_file() {
+                    self.add_input_file(&f.path());
                 }
             }
         }
@@ -555,15 +544,13 @@ impl App {
     fn add_input_file(&mut self, path: &PathBuf) {
         if let Some(extension) = path.extension() {
             let ext = OsString::from(extension);
-            if self.supported_extensions_load.contains(&ext) {
-                if !self.exclude_files.contains(path) {
-                    self.input_files.insert(path.clone());
 
-                    // hash each value if hashing mode:
-                    if !self.cli_args.force {
-                        let data = std::fs::read(path).unwrap();
-                        data.hash(&mut self.hasher);
-                    }
+            if self.supported_extensions_load.contains(&ext) && !self.exclude_files.contains(path) {
+                self.input_files.insert(path.clone());
+                // hash each value if hashing mode:
+                if !self.cli_args.force {
+                    let data = std::fs::read(path).unwrap();
+                    data.hash(&mut self.hasher);
                 }
             }
         }
@@ -603,7 +590,7 @@ impl App {
             return true;
         }
 
-        return false;
+        false
     }
 
     /// returns the hash value stored on disk if any exists:
@@ -611,12 +598,10 @@ impl App {
         let file_path = format!("{}.hash", self.cli_args.output.display());
         let result = tokio::fs::read_to_string(file_path).await;
 
-        let old_hash_value = match result {
+        match result {
             Ok(old_hash_value) => old_hash_value.parse().unwrap(),
             Err(_) => 0,
-        };
-
-        return old_hash_value;
+        }
     }
 
     /// removes all atlas related files from previous run with same name if any exists:
@@ -667,7 +652,7 @@ impl App {
                 self.cli_args.premultiply,
                 self.cli_args.trim,
                 self.cli_args.adjust_fit,
-                self.cli_args.pad.try_into().unwrap(),
+                self.cli_args.pad.into(),
                 self.cli_args.atlas_size as u32,
             )));
         }
@@ -693,12 +678,10 @@ impl App {
     fn sort_textures(&mut self) {
         if self.cli_args.verbose {
             if let Ok(_status) = Status::new(&self.console, "Sorting textures by area...") {
-                self.textures
-                    .sort_by(|a, b| a.get_area().cmp(&b.get_area()));
+                self.textures.sort_by_key(|a| a.get_area());
             }
         } else {
-            self.textures
-                .sort_by(|a, b| a.get_area().cmp(&b.get_area()));
+            self.textures.sort_by_key(|a| a.get_area());
         }
 
         if self.cli_args.verbose {
@@ -824,23 +807,25 @@ impl App {
         let file_path = PathBuf::from(format!("{}.json", self.cli_args.output.display()));
         let mut file = std::fs::File::create(file_path.clone()).unwrap();
 
-        file.write(String::from("{\n").as_bytes()).unwrap();
-        file.write(String::from("\t\"ImageAtlas\":\n").as_bytes())
+        file.write_all(String::from("{\n").as_bytes()).unwrap();
+        file.write_all(String::from("\t\"ImageAtlas\":\n").as_bytes())
             .unwrap();
-        file.write(String::from("\t{\n").as_bytes()).unwrap();
+        file.write_all(String::from("\t{\n").as_bytes()).unwrap();
 
         // info part:
-        file.write(String::from("\t\t\"info\":\n").as_bytes())
+        file.write_all(String::from("\t\t\"info\":\n").as_bytes())
             .unwrap();
-        file.write(String::from("\t\t{\n").as_bytes()).unwrap();
-        file.write(format!("\t\t\t\"numberOfAtlasImages\": {},\n", self.packers.len()).as_bytes())
+        file.write_all(String::from("\t\t{\n").as_bytes()).unwrap();
+        file.write_all(
+            format!("\t\t\t\"numberOfAtlasImages\": {},\n", self.packers.len()).as_bytes(),
+        )
+        .unwrap();
+        file.write_all(format!("\t\t\t\"generatedWith\": \"{}\"\n", NAME).as_bytes())
             .unwrap();
-        file.write(format!("\t\t\t\"generatedWith\": \"{}\"\n", NAME).as_bytes())
+        file.write_all(String::from("\t\t},\n").as_bytes()).unwrap();
+        file.write_all(String::from("\t\t\"AtlasImage\":\n").as_bytes())
             .unwrap();
-        file.write(String::from("\t\t},\n").as_bytes()).unwrap();
-        file.write(String::from("\t\t\"AtlasImage\":\n").as_bytes())
-            .unwrap();
-        file.write(String::from("\t\t[\n").as_bytes()).unwrap();
+        file.write_all(String::from("\t\t[\n").as_bytes()).unwrap();
 
         for i in 0..self.packers.len() {
             let img_ext = get_atlas_image_extension(self.cli_args.atlas_image);
@@ -849,19 +834,20 @@ impl App {
 
             if let Some(packer) = self.packers.get(i) {
                 if i > 0 {
-                    file.write(String::from(",\n").as_bytes()).unwrap();
+                    file.write_all(String::from(",\n").as_bytes()).unwrap();
                 }
 
-                if let Some(file_name) = file_path_stripped.file_name() {
-                    if let Some(file_name_str) = file_name.to_str() {
-                        packer.save_json(&mut file, file_name_str, &img_ext);
-                    }
+                if let Some(file_name) = file_path_stripped.file_name()
+                    && let Some(file_name_str) = file_name.to_str()
+                {
+                    packer.save_json(&mut file, file_name_str, &img_ext);
                 }
             }
         }
-        file.write(String::from("\n\t\t]\n").as_bytes()).unwrap();
-        file.write(String::from("\t}\n").as_bytes()).unwrap();
-        file.write(String::from("}\n").as_bytes()).unwrap();
+        file.write_all(String::from("\n\t\t]\n").as_bytes())
+            .unwrap();
+        file.write_all(String::from("\t}\n").as_bytes()).unwrap();
+        file.write_all(String::from("}\n").as_bytes()).unwrap();
 
         if self.cli_args.verbose {
             let msg = format!("Wrote '{}'", file_path.display());
@@ -880,7 +866,7 @@ impl App {
         }
 
         // info part:
-        file.write(format!("{},{}\n", self.packers.len(), NAME).as_bytes())
+        file.write_all(format!("{},{}\n", self.packers.len(), NAME).as_bytes())
             .unwrap();
 
         for i in 0..self.packers.len() {
@@ -888,12 +874,11 @@ impl App {
             let file_path_stripped =
                 PathBuf::from(format!("{}{}", self.cli_args.output.display(), i));
 
-            if let Some(packer) = self.packers.get(i) {
-                if let Some(file_name) = file_path_stripped.file_name() {
-                    if let Some(file_name_str) = file_name.to_str() {
-                        packer.save_txt(&mut file, file_name_str, &img_ext);
-                    }
-                }
+            if let Some(packer) = self.packers.get(i)
+                && let Some(file_name) = file_path_stripped.file_name()
+                && let Some(file_name_str) = file_name.to_str()
+            {
+                packer.save_txt(&mut file, file_name_str, &img_ext);
             }
         }
 
@@ -906,69 +891,73 @@ impl App {
 
     /// writes the description header for TXT atlas descriptor:
     fn write_txt_header(&self, file: &mut fs::File) {
-        file.write(String::from("/*\n").as_bytes()).unwrap();
-        file.write(
+        file.write_all(String::from("/*\n").as_bytes()).unwrap();
+        file.write_all(
             String::from("\t ************************************************\n").as_bytes(),
         )
         .unwrap();
-        file.write(format!("\t * Generated with: {}\n", NAME).as_bytes())
+        file.write_all(format!("\t * Generated with: {}\n", NAME).as_bytes())
             .unwrap();
-        file.write(
+        file.write_all(
             String::from("\t ************************************************\n").as_bytes(),
         )
         .unwrap();
-        file.write(String::from("\n").as_bytes()).unwrap();
-        file.write(
+        file.write_all(String::from("\n").as_bytes()).unwrap();
+        file.write_all(
             String::from("\t ************************************************\n").as_bytes(),
         )
         .unwrap();
-        file.write(String::from("\t * Format description:\n").as_bytes())
+        file.write_all(String::from("\t * Format description:\n").as_bytes())
             .unwrap();
-        file.write(
+        file.write_all(
             String::from("\t ************************************************\n").as_bytes(),
         )
         .unwrap();
-        file.write(String::from("\t [info]\n").as_bytes()).unwrap();
-        file.write(String::from("\t numberOfAtlasImages,generatedWith\n").as_bytes())
+        file.write_all(String::from("\t [info]\n").as_bytes())
             .unwrap();
-        file.write(String::from("\n").as_bytes()).unwrap();
-        file.write(String::from("\t [AtlasImage (repeated numberOfAtlasImages)]\n").as_bytes())
+        file.write_all(String::from("\t numberOfAtlasImages,generatedWith\n").as_bytes())
             .unwrap();
-        file.write(String::from("\t atlasImageName,numberOfImages,atlasImageWidth,atlasImageHeight,generateMipMaps\n").as_bytes())
+        file.write_all(String::from("\n").as_bytes()).unwrap();
+        file.write_all(String::from("\t [AtlasImage (repeated numberOfAtlasImages)]\n").as_bytes())
             .unwrap();
-        file.write(String::from("\n").as_bytes()).unwrap();
-        file.write(String::from("\t [Image (repeated numberOfImages)]\n").as_bytes())
+        file.write_all(String::from("\t atlasImageName,numberOfImages,atlasImageWidth,atlasImageHeight,generateMipMaps\n").as_bytes())
             .unwrap();
-        file.write(String::from("\t name,x,y,w,h,trimmed,rotated,fx,fy,fw,fh (NOTE: fx,fy,fw,fh valid if trimmed==1)\n").as_bytes())
+        file.write_all(String::from("\n").as_bytes()).unwrap();
+        file.write_all(String::from("\t [Image (repeated numberOfImages)]\n").as_bytes())
             .unwrap();
-        file.write(String::from("\n").as_bytes()).unwrap();
-        file.write(String::from("\t Text format example:\n").as_bytes())
+        file.write_all(String::from("\t name,x,y,w,h,trimmed,rotated,fx,fy,fw,fh (NOTE: fx,fy,fw,fh valid if trimmed==1)\n").as_bytes())
             .unwrap();
-        file.write(String::from("\t [info]\n").as_bytes()).unwrap();
-        file.write(String::from("\t [AtlasImage]\n").as_bytes())
+        file.write_all(String::from("\n").as_bytes()).unwrap();
+        file.write_all(String::from("\t Text format example:\n").as_bytes())
             .unwrap();
-        file.write(String::from("\t [Image]\n").as_bytes()).unwrap();
-        file.write(String::from("\t [Image]\n").as_bytes()).unwrap();
-        file.write(String::from("\t ...\n").as_bytes()).unwrap();
-        file.write(String::from("\t [AtlasImage]\n").as_bytes())
+        file.write_all(String::from("\t [info]\n").as_bytes())
             .unwrap();
-        file.write(String::from("\t [Image]\n").as_bytes()).unwrap();
-        file.write(String::from("\t [Image]\n").as_bytes()).unwrap();
-        file.write(String::from("\t ...\n").as_bytes()).unwrap();
-        file.write(String::from("*/@\n").as_bytes()).unwrap();
+        file.write_all(String::from("\t [AtlasImage]\n").as_bytes())
+            .unwrap();
+        file.write_all(String::from("\t [Image]\n").as_bytes())
+            .unwrap();
+        file.write_all(String::from("\t [Image]\n").as_bytes())
+            .unwrap();
+        file.write_all(String::from("\t ...\n").as_bytes()).unwrap();
+        file.write_all(String::from("\t [AtlasImage]\n").as_bytes())
+            .unwrap();
+        file.write_all(String::from("\t [Image]\n").as_bytes())
+            .unwrap();
+        file.write_all(String::from("\t [Image]\n").as_bytes())
+            .unwrap();
+        file.write_all(String::from("\t ...\n").as_bytes()).unwrap();
+        file.write_all(String::from("*/@\n").as_bytes()).unwrap();
     }
 
     /// converts rect heuristic to the enum used in flow_rectpack:
     fn convert_rect_heuristic(&self, heuristic: &RectHeuristic) -> FreeRectHeuristic {
-        let output_heuristic = match heuristic {
+        match heuristic {
             RectHeuristic::ShortSideFit => FreeRectHeuristic::ShortSideFit,
             RectHeuristic::LongSideFit => FreeRectHeuristic::LongSideFit,
             RectHeuristic::AreaFit => FreeRectHeuristic::AreaFit,
             RectHeuristic::BottomLeft => FreeRectHeuristic::BottomLeft,
             RectHeuristic::ContactPoint => FreeRectHeuristic::ContactPoint,
-        };
-
-        return output_heuristic;
+        }
     }
 
     /// saves input hash value to disk:
@@ -976,7 +965,7 @@ impl App {
         let file_path = PathBuf::from(format!("{}.hash", self.cli_args.output.display()));
         let data = format!("{}", self.hash_value);
 
-        write_file_sync(&file_path, &data.as_bytes()).unwrap();
+        write_file_sync(&file_path, data.as_bytes()).unwrap();
 
         if self.cli_args.verbose {
             self.console
@@ -991,14 +980,12 @@ impl App {
 ///
 /// * `atlas_image` - is the atlas image type.
 pub fn get_atlas_image_extension(atlas_image: AtlasImage) -> String {
-    let image_extension = match atlas_image {
+    match atlas_image {
         AtlasImage::Png => String::from("png"),
         AtlasImage::Tga => String::from("tga"),
         AtlasImage::Tiff => String::from("tiff"),
         AtlasImage::Webp => String::from("webp"),
-    };
-
-    return image_extension;
+    }
 }
 
 /// Get the load filter extension for given `load_filter`.
@@ -1007,7 +994,7 @@ pub fn get_atlas_image_extension(atlas_image: AtlasImage) -> String {
 ///
 /// * `load_filter` - is the load filter.
 pub fn get_load_filter_extension(load_filter: LoadFilter) -> String {
-    let image_extension = match load_filter {
+    match load_filter {
         LoadFilter::Bmp => String::from("bmp"),
         LoadFilter::Hdr => String::from("hdr"),
         LoadFilter::Jpg => String::from("jpg"),
@@ -1015,9 +1002,7 @@ pub fn get_load_filter_extension(load_filter: LoadFilter) -> String {
         LoadFilter::Tga => String::from("tga"),
         LoadFilter::Tiff => String::from("tiff"),
         LoadFilter::Webp => String::from("webp"),
-    };
-
-    return image_extension;
+    }
 }
 
 /// Create given `dir` recursively.
@@ -1029,7 +1014,7 @@ pub fn get_load_filter_extension(load_filter: LoadFilter) -> String {
 /// # Panics
 ///
 /// If failed to create given directory.
-pub fn create_dir_all<'a>(dir: &'a PathBuf) {
+pub fn create_dir_all(dir: &PathBuf) {
     match fs::create_dir_all(dir) {
         Ok(()) => info!("Created dir: '{}'", dir.display()),
         Err(err) => panic!(
@@ -1049,7 +1034,7 @@ pub fn create_dir_all<'a>(dir: &'a PathBuf) {
 /// # Panics
 ///
 /// If failed to remove given directory.
-pub fn remove_dir_all<'a>(dir: &'a PathBuf) {
+pub fn remove_dir_all(dir: &PathBuf) {
     match fs::remove_dir_all(dir) {
         Ok(()) => info!("Removed dir: '{}'", dir.display()),
         Err(err) => panic!(
@@ -1069,7 +1054,7 @@ pub fn remove_dir_all<'a>(dir: &'a PathBuf) {
 /// # Panics
 ///
 /// If failed to remove given `file_path`.
-pub fn remove_file<'a>(file_path: &'a PathBuf) {
+pub fn remove_file(file_path: &PathBuf) {
     match fs::remove_file(file_path) {
         Ok(()) => info!("Removed file: '{}'", file_path.display()),
         Err(err) => panic!(
@@ -1085,8 +1070,8 @@ pub fn remove_file<'a>(file_path: &'a PathBuf) {
 /// # Arguments
 ///
 /// * `dir` - is the directory.
-pub fn exists_dir<'a>(dir: &'a PathBuf) -> bool {
-    return dir.as_path().exists();
+pub fn exists_dir(dir: &Path) -> bool {
+    dir.exists()
 }
 
 /// Determine whether given `file_path` exists.
@@ -1094,8 +1079,8 @@ pub fn exists_dir<'a>(dir: &'a PathBuf) -> bool {
 /// # Arguments
 ///
 /// * `file_path` - is the file path.
-pub fn exists_file<'a>(file_path: &'a PathBuf) -> bool {
-    return file_path.is_file();
+pub fn exists_file(file_path: &Path) -> bool {
+    file_path.is_file()
 }
 
 /// Write `data` to given `file_path`.
@@ -1104,7 +1089,7 @@ pub fn exists_file<'a>(file_path: &'a PathBuf) -> bool {
 ///
 /// * `file_path` - is the file path.
 /// * `data` - is the data to write.
-pub fn write_file_sync<'a>(file_path: &'a PathBuf, data: &'a [u8]) -> io::Result<()> {
+pub fn write_file_sync(file_path: &PathBuf, data: &[u8]) -> io::Result<()> {
     // create output file:
     let mut file = std::fs::File::create(file_path)?;
 
@@ -1124,15 +1109,15 @@ async fn load_texture(
     pad: u32,
     atlas_size: u32,
 ) -> Texture {
-    let mut texture = Texture::new();
+    let mut texture = Texture::default();
 
     texture.load(&file_path, premultiply, trim, adjust_fit, pad, atlas_size);
 
-    return texture;
+    texture
 }
 
 /// saves an individual atlas image to disk (used for async tasks):
 async fn save_image(file_path: PathBuf, packer: Arc<Packer>, image_type: AtlasImage) -> PathBuf {
     packer.save_image(&file_path, image_type);
-    return file_path;
+    file_path
 }

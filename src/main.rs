@@ -5,6 +5,6 @@ use flow_texpack::App;
 
 #[tokio::main]
 async fn main() {
-    let mut app = App::new();
+    let mut app = App::default();
     app.run().await;
 }

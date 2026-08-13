@@ -42,9 +42,8 @@ pub struct Texture {
     pub buffer: RgbaImage,
 }
 
-impl Texture {
-    /// Instantiates a new `Texture` instance.
-    pub fn new() -> Self {
+impl Default for Texture {
+    fn default() -> Self {
         Self {
             file_path: PathBuf::new(),
             file_name: String::new(),
@@ -58,7 +57,9 @@ impl Texture {
             buffer: RgbaImage::new(1, 1),
         }
     }
+}
 
+impl Texture {
     /// Instantiates a new `Texture` instance based on given input params.
     ///
     /// # Arguments
@@ -115,10 +116,10 @@ impl Texture {
     ) {
         // remember file path and file name:
         self.file_path = file_path.clone();
-        if let Some(file_name) = file_path.file_name() {
-            if let Some(file_name_str) = file_name.to_str() {
-                self.file_name = String::from(file_name_str);
-            }
+        if let Some(file_name) = file_path.file_name()
+            && let Some(file_name_str) = file_name.to_str()
+        {
+            self.file_name = String::from(file_name_str);
         }
 
         // load the image:
@@ -232,7 +233,7 @@ impl Texture {
 
     /// Get the texture area (width * height).
     pub fn get_area(&self) -> u32 {
-        return self.width * self.height;
+        self.width * self.height
     }
 
     /// Updates initial size properties.
@@ -304,7 +305,7 @@ impl Texture {
         self.width = new_width;
         self.height = new_height;
 
-        return trimmed;
+        trimmed
     }
 
     /// Premultiply destination pixel by alpha.
@@ -359,10 +360,10 @@ impl Texture {
         new_height -= padding;
 
         // make sure width and height is at least 1 pixel after scaling and padding:
-        if new_width <= 0 {
+        if new_width == 0 {
             new_width = 1;
         }
-        if new_height <= 0 {
+        if new_height == 0 {
             new_height = 1;
         }
 
@@ -381,7 +382,7 @@ impl Texture {
         self.width = new_width;
         self.height = new_height;
 
-        return dst_image.to_rgba8();
+        dst_image.to_rgba8()
     }
 }
 
@@ -422,7 +423,7 @@ mod tests {
 
     #[test]
     fn texture_basics() {
-        let t1 = Texture::new();
+        let t1 = Texture::default();
         assert_eq!(t1.width, 0);
         assert_eq!(t1.height, 0);
         assert_eq!(t1.frame_x, 0);
@@ -453,21 +454,21 @@ mod tests {
             let base_file_path = "test_data/white_32x32";
             let file_path = PathBuf::from(format!("{}.{}", base_file_path, ext.display()));
 
-            let mut t = Texture::new();
+            let mut t = Texture::default();
             t.load(&file_path, false, false, false, 0, 64);
             assert_eq!(t.width, 32);
             assert_eq!(t.height, 32);
             assert_eq!(t.file_path, file_path);
-            if let Some(file_name) = file_path.file_name() {
-                if let Some(file_name_str) = file_name.to_str() {
-                    assert_eq!(t.file_name, file_name_str);
-                }
+            if let Some(file_name) = file_path.file_name()
+                && let Some(file_name_str) = file_name.to_str()
+            {
+                assert_eq!(t.file_name, file_name_str);
             }
             assert_eq!(t.frame_x, 0);
             assert_eq!(t.frame_y, 0);
             assert_eq!(t.frame_w, 32);
             assert_eq!(t.frame_h, 32);
-            assert_eq!(t.hash_value > 0, true);
+            assert!(t.hash_value > 0);
         }
     }
 
@@ -480,7 +481,7 @@ mod tests {
             AtlasImage::Webp,
         ];
 
-        let mut t1 = Texture::new();
+        let mut t1 = Texture::default();
         t1.load(
             &PathBuf::from("test_data/white_32x32.png"),
             false,
@@ -498,19 +499,19 @@ mod tests {
             let file_path = PathBuf::from(format!(
                 "{}.{}",
                 base_file_path,
-                get_atlas_image_extension(atlas_image_type.clone())
+                get_atlas_image_extension(*atlas_image_type)
             ));
-            output.save(&file_path, atlas_image_type.clone());
+            output.save(&file_path, *atlas_image_type);
 
-            assert_eq!(exists_file(&file_path), true);
+            assert!(exists_file(&file_path));
             remove_file(&file_path);
-            assert_eq!(exists_file(&file_path), false);
+            assert!(!exists_file(&file_path));
         }
     }
 
     #[test]
     fn texture_copy_pixels() {
-        let mut t1 = Texture::new();
+        let mut t1 = Texture::default();
         t1.load(
             &PathBuf::from("test_data/white_32x32.png"),
             false,
@@ -520,7 +521,7 @@ mod tests {
             64,
         );
 
-        let mut t2 = Texture::new();
+        let mut t2 = Texture::default();
         t2.load(
             &PathBuf::from("test_data/red_32x32.png"),
             false,
@@ -530,7 +531,7 @@ mod tests {
             64,
         );
 
-        let mut t3 = Texture::new();
+        let mut t3 = Texture::default();
         t3.load(
             &PathBuf::from("test_data/green_32x32.png"),
             false,
@@ -540,7 +541,7 @@ mod tests {
             64,
         );
 
-        let mut t4 = Texture::new();
+        let mut t4 = Texture::default();
         t4.load(
             &PathBuf::from("test_data/blue_32x32.png"),
             false,
@@ -559,14 +560,14 @@ mod tests {
         output.copy_pixels(&t4, 0, 32);
 
         output.save(&file_path, AtlasImage::Png);
-        assert_eq!(exists_file(&file_path), true);
+        assert!(exists_file(&file_path));
         remove_file(&file_path);
-        assert_eq!(exists_file(&file_path), false);
+        assert!(!exists_file(&file_path));
     }
 
     #[test]
     fn texture_copy_pixels_rot_90cw() {
-        let mut t1 = Texture::new();
+        let mut t1 = Texture::default();
         t1.load(
             &PathBuf::from("test_data/white_32x16.png"),
             false,
@@ -583,9 +584,9 @@ mod tests {
         output.copy_pixels_rot_90cw(&t1, 32, 0);
 
         output.save(&file_path, AtlasImage::Png);
-        assert_eq!(exists_file(&file_path), true);
+        assert!(exists_file(&file_path));
         remove_file(&file_path);
-        assert_eq!(exists_file(&file_path), false);
+        assert!(!exists_file(&file_path));
     }
 
     #[test]
