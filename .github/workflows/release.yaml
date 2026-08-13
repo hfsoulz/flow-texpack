@@ -23,7 +23,7 @@ jobs:
                       asset_name: aarch64-apple-darwin
 
         steps:
-            - uses: actions/checkout@v7
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
               with:
                   fetch-depth: 0
 
@@ -31,13 +31,9 @@ jobs:
               shell: bash
               run: echo "RELEASE_VERSION=${GITHUB_REF:11}" >> $GITHUB_ENV
 
-            - run: echo ${{ env.RELEASE_VERSION }}
-
             - run: cargo install git-cliff
             - run: git-cliff -o CHANGELOG.md
             - run: git-cliff --latest --strip header -o CHANGES.md
-            - run: cat CHANGELOG.md
-            - run: cat CHANGES.md
 
             # This step reads a file from repo and use it for body of the release
             # This works on any self-hosted runner OS
@@ -78,7 +74,7 @@ jobs:
                   fi
 
             - name: Upload binaries to release
-              uses: svenstaro/upload-release-action@v2
+              uses: svenstaro/upload-release-action@29e53e917877a24fad85510ded594ab3c9ca12de # v2.11.5
               with:
                   repo_token: ${{ secrets.WRITE_TOKEN }}
                   file_glob: true

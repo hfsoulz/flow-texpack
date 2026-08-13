@@ -2,24 +2,18 @@ name: Rust CI Build/Test
 
 on:
     push:
-        branches: [main]
     pull_request:
-        branches: [main]
 
 jobs:
     test:
-        name: Rust CI Build/Test
+        name: Rust CI Check/Build/Test
         runs-on: ubuntu-latest
         env:
             RUST_BACKTRACE: 1
         steps:
-            - uses: actions/checkout@v7
-            - run: cargo build
-            - run: cargo test
-
-    rustfmt:
-        name: Format code check (rustfmt)
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
             - run: cargo fmt -- --check
+            - run: cargo clippy --all-targets -- -D warnings
+            - run: cargo check --all-targets
+            - run: cargo build --all-targets
+            - run: cargo test --all-targets

@@ -9,15 +9,14 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v7
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
               with:
                   fetch-depth: 0
 
             - run: cargo install git-cliff
             - run: git-cliff --latest --strip header -o CHANGELOG.md
-            - run: cat CHANGELOG.md
 
-            - uses: actions/forgejo-release@v2.13.4
+            - uses: actions/forgejo-release@afcb5164533d654c98627678971965401a63949f # v2.13.4
               with:
                   direction: upload
                   token: ${{ secrets.WRITE_TOKEN }}
