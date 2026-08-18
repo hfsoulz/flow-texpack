@@ -9,12 +9,20 @@ both texture atlas and descriptions file that can be read by a game.
 Install `Rust` from your package manager or by downloading from here:
 [https://rust-lang.org/](https://rust-lang.org/).
 
-## Build
+## Build from source
 
 Build using release mode and install locally (on GNU/Linux this is `~/.cargo/bin`):
 
 ```sh
 cargo install --locked --path .
+```
+
+## Install from Cargo
+
+Install directly from Cargo:
+
+```sh
+cargo install flow-texpack
 ```
 
 ## Usage
