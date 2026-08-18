@@ -9,19 +9,19 @@ homepage = "https://luflow.net/"
 repository = "https://github.com/hfsoulz/flow-texpack.git"
 readme = "README.md"
 keywords = ["image atlas", "texture-atlas", "generator", "builder"]
-categories = ["command-line-utilities"]
+categories = ["command-line-utilities", "game-development"]
 exclude = [".github", ".forgejo", ".gitignore"]
 
 [dependencies]
 flow-rectpack = "0.2.2"
-tokio = { version = "1.52.3", features = ["macros", "fs", "io-util", "rt-multi-thread"] }
+tokio = { version = "1.53.1", features = ["macros", "fs", "io-util", "rt-multi-thread"] }
 async-recursion = "1.1.1"
-rich_rust = "0.2.1"
+rich_rust = "0.2.2"
 image = "0.25.10"
-clap = { version = "4.6.1", features = ["derive"] }
+clap = { version = "4.6.6", features = ["derive"] }
 fern = "0.7.1"
-log = "0.4.32"
-humantime = "2.3.0"
+log = "0.4.33"
+humantime = "2.4.0"
 
 [dev-dependencies]
 assert_cmd = "2.2.2"
