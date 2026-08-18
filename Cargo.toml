@@ -5,15 +5,15 @@ edition = "2024"
 authors = ["Andreas Widen <aw@luflow.net>"]
 description = "flow-texpack is a program that will allow you to generate texture atlas from input images (BMP, HDR, JPG, PNG, TGA, TIFF, WEBP). The application generates both texture atlas and descriptions file that can be read by a game."
 license = "Zlib"
-homepage = "https://git.luflow.net/hfsoulz/flow-texpack.git"
-repository = "https://git.luflow.net/hfsoulz/flow-texpack.git"
+homepage = "https://luflow.net/"
+repository = "https://github.com/hfsoulz/flow-texpack.git"
 readme = "README.md"
-documentation = "https://git.luflow.net/hfsoulz/flow-texpack.git"
-keywords = ["image atlas", "image atlas-generator", "texture-atlas", "texture-atlas-generator", "texture-atlas-builder"]
-exclude = [".github", "/ci/*", "*.log"]
+keywords = ["image atlas", "texture-atlas", "generator", "builder"]
+categories = ["command-line-utilities"]
+exclude = [".github", ".forgejo", ".gitignore"]
 
 [dependencies]
-flow-rectpack = { git = "https://git.luflow.net/hfsoulz/flow-rectpack.git", tag = "v0.2.0" }
+flow-rectpack = "0.2.2"
 tokio = { version = "1.52.3", features = ["macros", "fs", "io-util", "rt-multi-thread"] }
 async-recursion = "1.1.1"
 rich_rust = "0.2.1"
