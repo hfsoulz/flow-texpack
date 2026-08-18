@@ -8,7 +8,7 @@ license = "Zlib"
 homepage = "https://luflow.net/"
 repository = "https://github.com/hfsoulz/flow-texpack.git"
 readme = "README.md"
-keywords = ["image atlas", "texture-atlas", "generator", "builder"]
+keywords = ["image-atlas", "texture-atlas", "generator", "builder"]
 categories = ["command-line-utilities", "game-development"]
 exclude = [".github", ".forgejo", ".gitignore"]
 
