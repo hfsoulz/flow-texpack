@@ -26,7 +26,7 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 /// name of the application:
-const NAME: &str = "https://git.luflow.net/hfsoulz/flow-texpack.git";
+const NAME: &str = "https://github.com/hfsoulz/flow-texpack.git";
 
 /// short about description shown for option '-h':
 const ABOUT: &str = "

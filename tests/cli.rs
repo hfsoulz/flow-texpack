@@ -24,7 +24,7 @@ fn validate_descriptor_json(json_path: &PathBuf) {
     assert_eq!(Some("\t\t{"), lines.next());
     assert_eq!(Some("\t\t\t\"numberOfAtlasImages\": 1,"), lines.next());
     assert_eq!(
-        Some("\t\t\t\"generatedWith\": \"https://git.luflow.net/hfsoulz/flow-texpack.git\""),
+        Some("\t\t\t\"generatedWith\": \"https://github.com/hfsoulz/flow-texpack.git\""),
         lines.next()
     );
     assert_eq!(Some("\t\t},"), lines.next());
@@ -75,7 +75,7 @@ fn validate_descriptor_txt(txt_path: &PathBuf, with_header: bool) {
             lines.next()
         );
         assert_eq!(
-            Some("\t * Generated with: https://git.luflow.net/hfsoulz/flow-texpack.git"),
+            Some("\t * Generated with: https://github.com/hfsoulz/flow-texpack.git"),
             lines.next()
         );
         assert_eq!(
@@ -128,7 +128,7 @@ fn validate_descriptor_txt(txt_path: &PathBuf, with_header: bool) {
     }
 
     assert_eq!(
-        Some("1,https://git.luflow.net/hfsoulz/flow-texpack.git"),
+        Some("1,https://github.com/hfsoulz/flow-texpack.git"),
         lines.next()
     );
     assert_eq!(Some("atlas0.png,2,64,64,1"), lines.next());
