@@ -4,7 +4,7 @@ labels:
     - enhancement
 assignees:
     - hfsoulz
-title: '[feature] '
+title: '[feature]: '
 body:
     - type: markdown
       attributes:

@@ -4,7 +4,7 @@ labels:
     - bug
 assignees:
     - hfsoulz
-title: '[bug] '
+title: '[bug]: '
 body:
     - type: markdown
       attributes:
