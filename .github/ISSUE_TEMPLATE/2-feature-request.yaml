@@ -1,0 +1,37 @@
+name: Feature request ⛰️
+description: Suggest a new feature
+labels:
+    - enhancement
+assignees:
+    - hfsoulz
+title: '[feature] '
+body:
+    - type: markdown
+      attributes:
+          value: Thank you for suggesting this feature! The more information you provide, the better.
+    - type: checkboxes
+      attributes:
+          label: Is there an existing issue or pull request?
+          options:
+              - label: I have searched the existing issues and pull requests
+                required: true
+    - type: textarea
+      attributes:
+          label: Describe your use case
+          description: Describe the problem you're trying to solve.
+      validations:
+          required: true
+    - type: textarea
+      attributes:
+          label: Describe the solution you'd like
+          description: Please explain what the wanted solution should look like. You are **strongly encouraged** to attach a snippet of (pseudo)code.
+      validations:
+          required: true
+    - type: textarea
+      attributes:
+          label: Alternatives, if applicable
+          description: A clear and concise description of any alternative solutions or features you've managed to come up with.
+    - type: textarea
+      attributes:
+          label: Additional Context
+          description: Add any other context about the feature request here.
