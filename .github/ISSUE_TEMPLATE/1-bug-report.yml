@@ -24,13 +24,13 @@ body:
     - type: input
       attributes:
           label: Version
-          description: Can be found in `Cargo.toml` of your project (`version` field in `[package]` section).
+          description: Output of `flow-texpack -V`
       validations:
           required: true
     - type: textarea
       attributes:
           label: Steps to reproduce the bug
-          description: A command like `cargo run -- options...` or multiple commands.
+          description: A command like `flow-texpack options...` or multiple commands.
       validations:
           required: true
     - type: textarea
