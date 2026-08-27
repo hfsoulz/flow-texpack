@@ -4,6 +4,12 @@ Contributions are always welcome! There is a multitude of ways in which you can
 help depending on what you like to do, or are good at. Documentation, code,
 issues, new features are all ways of contributing and greatly appreciated!
 
+Contributions can be made here:
+
+- https://git.luflow.net/hfsoulz/flow-texpack.git (main development)
+- https://codeberg.org/hfsoulz/flow-texpack.git (mirror)
+- https://github.com/hfsoulz/flow-texpack.git (mirror)
+
 ## Install Rust
 
 If you want to contribute code then `Rust` (stable) should be installed along
