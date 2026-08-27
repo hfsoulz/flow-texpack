@@ -585,9 +585,9 @@ dependencies = [
 
 [[package]]
 name = "flow-rectpack"
-version = "0.2.4"
+version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5ae69f7c07370add69e4d53252112f85d035f8808e936e6127594229280a8e81"
+checksum = "e09578106f03cef5313cc302b0a6781d66bc119a75d781953d6a52f7d82d8f00"
 
 [[package]]
 name = "flow-texpack"
