@@ -591,7 +591,7 @@ checksum = "795bef20fde5bedc5ac1b52724763b60df84caeab12f65bc2d4f0a59bfaf6200"
 
 [[package]]
 name = "flow-texpack"
-version = "0.2.5"
+version = "0.2.6"
 dependencies = [
  "assert_cmd",
  "async-recursion",
