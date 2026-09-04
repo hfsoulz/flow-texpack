@@ -8,7 +8,6 @@ Contributions can be made here:
 
 - https://git.luflow.net/hfsoulz/flow-texpack.git (main development)
 - https://codeberg.org/hfsoulz/flow-texpack.git (mirror)
-- https://github.com/hfsoulz/flow-texpack.git (mirror)
 
 ## Install Rust
 
