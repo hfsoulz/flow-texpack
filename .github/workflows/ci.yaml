@@ -1,0 +1,27 @@
+name: Rust CI Build/Test
+
+on:
+    push:
+        branches:
+            - 'main'
+        paths-ignore:
+            - '*.md'
+    pull_request:
+        branches:
+            - '*'
+        paths-ignore:
+            - '*.md'
+
+jobs:
+    test:
+        name: Rust CI Check/Build/Test
+        runs-on: ubuntu-latest
+        env:
+            RUST_BACKTRACE: 1
+        steps:
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+            - run: cargo fmt -- --check
+            - run: cargo clippy --all-targets -- -D warnings
+            - run: cargo check --all-targets
+            - run: cargo build --all-targets
+            - run: cargo test --all-targets
