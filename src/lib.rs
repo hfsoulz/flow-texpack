@@ -42,42 +42,6 @@
 //! ```sh
 //! flow-texpack -i data/characters data/tiles -o out/atlas -m -t -u -r -p 2 -v
 //! ```
-//!
-//! Enable `load filter` so that only `TGA` images are included in the texture atlas:
-//!
-//! ```sh
-//! flow-texpack -i data/tiles -o out/atlas --load-filter tga -v
-//! ```
-//!
-//! Enable rect heuristic `AreaFit`:
-//!
-//! ```sh
-//! flow-texpack -i data/tiles -o out/atlas --rect-heuristic area-fit -v
-//! ```
-//!
-//! Enable output `atlas size` of **2048x2048**:
-//!
-//! ```sh
-//! flow-texpack -i data/tiles -o out/atlas --atlas-size pot2048 -v
-//! ```
-//!
-//! Read input files/directories from `input.txt` but exclude all in `exclude.txt`:
-//!
-//! ```sh
-//! flow-texpack --input-file input.txt --exlude-file exclude.txt -o out/atlas -v
-//! ```
-//!
-//! `Adjust atlas size` automatically so that texture will fit:
-//!
-//! ```sh
-//! flow-texpack -i data/characters -o out/atlas --adjust-size -v
-//! ```
-//!
-//! `Adjust texture size` so that it will fit given atlas size:
-//!
-//! ```sh
-//! flow-texpack -i data/characters -o out/atlas --adjust-fit -v
-//! ```
 
 #[doc(hidden)]
 pub mod texpack;
